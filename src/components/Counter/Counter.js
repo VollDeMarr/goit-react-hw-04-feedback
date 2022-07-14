@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
 import Statistics from './Statistics/Statistics';
 import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
@@ -8,52 +8,54 @@ import styles from './Counter.module.css';
 
 const options = ['good', 'neutral', 'bad'];
 
-class Counter extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
+function Counter() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  increment = prop => {
-    this.setState(prevState => {
-      this.countTotalFeedback();
-      return {
-        [prop]: prevState[prop] + 1,
-      };
-    });
-  };
+  const increment = prop => {
+    switch (prop) {
+      case 'good':
+        setGood(good + 1);
+        break;
+      case 'neutral':
+        setNeutral(neutral + 1);
+        break;
+      case 'bad':
+        setBad(bad + 1);
+        break;
 
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
+      default:
+        console.log('error');
+        break;
+    }
+  };
+  const countTotalFeedback = () => {
     return good + neutral + bad;
   };
-
-  countPositiveFeedbackPercentage = () => {
-    const { good, neutral, bad } = this.state;
+  const countPositiveFeedbackPercentage = () => {
     return Math.floor((good / (good + neutral + bad)) * 100);
   };
 
-  render() {
-    return (
-      <div className={styles.counter}>
-        <Section title="Please leave feedback">
-          <FeedbackOptions options={options} onLeaveFeedback={this.increment} />
+  return (
+    <div className={styles.counter}>
+      <Section title="Please leave feedback">
+        <FeedbackOptions options={options} onLeaveFeedback={increment} />
+      </Section>
+      <div>
+        <Section title="Statistics">
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
+          ></Statistics>
         </Section>
-        <div>
-          <Section title="Statistics">
-            <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}
-            ></Statistics>
-          </Section>
-        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default Counter;
+
