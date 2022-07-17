@@ -34,7 +34,7 @@ function Counter() {
     return good + neutral + bad;
   };
   const countPositiveFeedbackPercentage = () => {
-    return Math.floor((good / (good + neutral + bad)) * 100);
+    return Math.floor((good / countTotalFeedback()) * 100);
   };
 
   return (
@@ -50,7 +50,7 @@ function Counter() {
             bad={bad}
             total={countTotalFeedback()}
             positivePercentage={countPositiveFeedbackPercentage()}
-          ></Statistics>
+          />
         </Section>
       </div>
     </div>
@@ -58,4 +58,3 @@ function Counter() {
 }
 
 export default Counter;
-
